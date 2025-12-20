@@ -1,49 +1,99 @@
+'use client';
+
+import { Button } from './ui';
+import ThemeToggle from './ThemeToggle';
+
 export default function Header() {
   return (
-    <header className="border-b border-gray-200 bg-white sticky top-0 z-50">
+    <header className="border-b border-border/50 glass sticky top-0 z-50 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <a href="/" className="text-2xl font-bold text-gray-900">
-              Riff
-            </a>
-          </div>
+          <a href="/" className="flex items-center gap-2.5 group">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-primary-500/50 group-hover:scale-110 transition-all duration-300">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              </svg>
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">Riff</span>
+          </a>
 
-          {/* Search bar */}
-          <div className="flex-1 max-w-2xl mx-8">
-            <div className="relative">
+          {/* Search bar - Hidden on mobile */}
+          <div className="hidden md:flex flex-1 max-w-xl mx-8">
+            <div className="relative w-full group">
+              <svg
+                className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary-500 transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
               <input
                 type="text"
-                placeholder="악기 검색..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="악기, 브랜드, 모델명 검색..."
+                className="w-full pl-12 pr-4 py-2.5 border border-transparent hover:border-neutral-300 dark:hover:border-neutral-700 focus:border-primary-500 rounded-full placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
+                style={{
+                  backgroundColor: 'var(--background-secondary)',
+                  color: 'var(--foreground)'
+                }}
+                suppressHydrationWarning
               />
-              <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
             </div>
           </div>
 
-          {/* Auth buttons */}
+          {/* Right section */}
           <div className="flex items-center gap-3">
-            <button className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium">
-              로그인
-            </button>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
-              회원가입
-            </button>
+            <ThemeToggle />
+            <div className="h-6 w-px bg-border/50 hidden sm:block" />
+            <div className="hidden sm:flex items-center gap-2">
+              <Button variant="ghost" size="sm">
+                로그인
+              </Button>
+              <button className="px-5 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-primary-500/30 hover:scale-105 transition-all duration-200">
+                회원가입
+              </button>
+            </div>
+            {/* Mobile auth */}
+            <div className="sm:hidden">
+              <button className="px-4 py-1.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-xs font-semibold rounded-full hover:scale-105 transition-transform">
+                로그인
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Search bar */}
+        <div className="md:hidden pb-3 pt-1">
+          <div className="relative group">
+            <svg
+              className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary-500 transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input
+              type="text"
+              placeholder="악기 검색..."
+              className="w-full pl-11 pr-4 py-2.5 border border-transparent focus:border-primary-500 rounded-full text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all"
+              style={{
+                backgroundColor: 'var(--background-secondary)',
+                color: 'var(--foreground)'
+              }}
+              suppressHydrationWarning
+            />
           </div>
         </div>
       </div>
