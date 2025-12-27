@@ -60,10 +60,10 @@ export default function Home() {
               당신의 음악 여정을 함께할 악기를 찾아보세요
             </p>
             <div className="flex gap-3 justify-center pt-2">
-              <button className="px-6 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-primary-500/30 hover:scale-105 transition-all duration-300">
+              <button className="px-6 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-primary-500/30 hover:scale-105 transition-all duration-300 cursor-pointer">
                 둘러보기
               </button>
-              <button className="px-6 py-2.5 glass rounded-full text-sm font-semibold text-foreground hover:scale-105 transition-all duration-300">
+              <button className="px-6 py-2.5 glass rounded-full text-sm font-semibold text-foreground hover:scale-105 transition-all duration-300 cursor-pointer">
                 판매하기
               </button>
             </div>
@@ -170,7 +170,7 @@ export default function Home() {
           {categories.map((category, index) => (
             <button
               key={category.id}
-              className="group relative overflow-hidden rounded-2xl p-8 text-left transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary-500/20 animate-[scaleIn_0.6s_ease-out]"
+              className="group relative overflow-hidden rounded-2xl p-8 text-left transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary-500/20 animate-[scaleIn_0.6s_ease-out] cursor-pointer"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-90 group-hover:opacity-100 transition-opacity`} />
@@ -205,9 +205,11 @@ export default function Home() {
           <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
             몇 분만에 등록하고 전국의 음악가들과 거래하세요
           </p>
-          <button className="px-8 py-3.5 bg-white text-primary-600 font-semibold rounded-full hover:shadow-2xl hover:scale-105 transition-all duration-300">
-            지금 시작하기
-          </button>
+          <a href="/signup" className="cursor-pointer">
+            <button className="px-8 py-3.5 bg-white text-primary-600 font-semibold rounded-full hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
+              지금 시작하기
+            </button>
+          </a>
         </div>
       </section>
     </div>

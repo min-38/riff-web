@@ -36,7 +36,7 @@ export default function Button({
         ${sizeStyles[size]}
         ${fullWidth ? 'w-full' : ''}
         rounded-lg font-medium transition-all
-        disabled:opacity-50 disabled:cursor-not-allowed
+        cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed
         ${className}
       `}
       disabled={disabled}
