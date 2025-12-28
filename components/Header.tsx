@@ -2,8 +2,11 @@
 
 import { Button } from './ui';
 import ThemeToggle from './ThemeToggle';
+import ProfileMenu from './ProfileMenu';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Header() {
+  const { isLoggedIn, isLoading, user, logout } = useAuth();
   return (
     <header className="border-b border-border/50 glass sticky top-0 z-50 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,23 +53,43 @@ export default function Header() {
           {/* Right section */}
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <div className="h-6 w-px bg-border/50 hidden sm:block" />
-            <div className="hidden sm:flex items-center gap-2">
-              <Button variant="ghost" size="sm">
-                로그인
-              </Button>
-              <a href="/signup" className="cursor-pointer">
-                <button className="px-5 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-primary-500/30 hover:scale-105 transition-all duration-200 cursor-pointer">
-                  회원가입
-                </button>
-              </a>
-            </div>
-            {/* Mobile auth */}
-            <div className="sm:hidden">
-              <button className="px-4 py-1.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-xs font-semibold rounded-full hover:scale-105 transition-transform cursor-pointer">
-                로그인
-              </button>
-            </div>
+
+            {!isLoading && (
+              <>
+                {isLoggedIn ? (
+                  // 로그인 상태: 프로필 메뉴
+                  <>
+                    <div className="h-6 w-px bg-border/50 hidden sm:block" />
+                    <ProfileMenu user={user} onLogout={logout} />
+                  </>
+                ) : (
+                  // 비로그인 상태: 로그인/회원가입 버튼
+                  <>
+                    <div className="h-6 w-px bg-border/50 hidden sm:block" />
+                    <div className="hidden sm:flex items-center gap-2">
+                      <a href="/login" className="cursor-pointer">
+                        <Button variant="ghost" size="sm">
+                          로그인
+                        </Button>
+                      </a>
+                      <a href="/signup" className="cursor-pointer">
+                        <button className="px-5 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-primary-500/30 hover:scale-105 transition-all duration-200 cursor-pointer">
+                          회원가입
+                        </button>
+                      </a>
+                    </div>
+                    {/* Mobile auth */}
+                    <div className="sm:hidden">
+                      <a href="/login" className="cursor-pointer">
+                        <button className="px-4 py-1.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-xs font-semibold rounded-full hover:scale-105 transition-transform cursor-pointer">
+                          로그인
+                        </button>
+                      </a>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
           </div>
         </div>
 

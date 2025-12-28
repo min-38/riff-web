@@ -61,6 +61,7 @@ export interface ResendVerificationResponse {
 export interface GetVerificationInfoResponse {
   email: string;
   sentAt?: string;
+  remainingCooldown?: number;
 }
 
 export interface VerifyEmailByTokenResponse {
@@ -89,4 +90,8 @@ export interface ApiError {
   message: string;
   errors?: string[];
   status?: number;
+  verified?: boolean;
+  verificationToken?: string;
+  remainingCooldown?: number;
+  [key: string]: any;
 }

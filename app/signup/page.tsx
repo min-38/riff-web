@@ -7,6 +7,7 @@ import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { authApi, type ApiError } from '@/lib/api';
 import { TermsOfServiceContent, PrivacyCollectionContent } from '@/lib/terms';
+import { isAuthenticated } from '@/lib/auth/token';
 
 interface FormErrors {
   email?: string;
@@ -39,6 +40,7 @@ export default function SignupPage() {
   const [nicknameStatus, setNicknameStatus] = useState<ValidationStatus>('idle');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   // 이메일 유효성 검사
   const validateEmail = (email: string): boolean => {
@@ -55,6 +57,15 @@ export default function SignupPage() {
     if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) return '비밀번호에 특수문자를 포함해주세요';
     return null;
   };
+
+  // 이미 로그인된 경우 메인 페이지로 리다이렉트
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push('/');
+    } else {
+      setIsCheckingAuth(false);
+    }
+  }, [router]);
 
   // 이메일 자동 중복 확인 
   useEffect(() => {
@@ -288,6 +299,18 @@ export default function SignupPage() {
       { label: '특수문자 포함', met: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) },
     ];
   };
+
+  // 인증 상태 확인 중이면 로딩 표시
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen" style={{ background: 'var(--background)' }}>
+        <Header />
+        <div className="max-w-md mx-auto px-4 py-12 sm:py-16 text-center">
+          <p className="text-base text-neutral-500">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--background)' }}>

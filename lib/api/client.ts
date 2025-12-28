@@ -39,6 +39,7 @@ class ApiClient {
       // 에러 응답 처리
       if (!response.ok) {
         const error: ApiError = {
+          ...data,
           message: data.message || '오류가 발생했습니다',
           errors: data.errors,
           status: response.status,

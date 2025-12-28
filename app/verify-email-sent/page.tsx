@@ -28,32 +28,69 @@ export default function VerifyEmailSentPage() {
   const [showCaptcha, setShowCaptcha] = useState(false);
   const turnstileRef = useRef<TurnstileHandle>(null);
 
+  // 인증 토큰 유효성 체크 함수
+  const checkTokenValidity = async () => {
+    if (!token) return false;
+
+    try {
+      const response = await authApi.getVerificationInfo({ verificationToken: token });
+      setEmail(response.email);
+      setSentTime(new Date());
+      setCooldown(response.remainingCooldown || 0);
+      return true;
+    } catch (err) {
+      const apiError = err as ApiError;
+
+      // 이미 인증이 완료된 경우
+      if (apiError.message?.includes('Invalid or expired verification token')) {
+        setMessage('이메일 인증이 완료되었습니다! 메인 페이지로 이동합니다...');
+        setTimeout(() => router.push('/'), 2000);
+        return false;
+      }
+
+      setError('인증 정보를 불러올 수 없습니다. 다시 시도해주세요.');
+      setTimeout(() => router.push('/'), 3000);
+      return false;
+    }
+  };
+
   // 인증 토큰으로 이메일 정보 가져오기
   useEffect(() => {
     const fetchVerificationInfo = async () => {
       if (!token) {
-        // 토큰이 없으면 메인 페이지로 리다이렉트
         router.push('/');
         return;
       }
 
-      try {
-        const response = await authApi.getVerificationInfo({ verificationToken: token });
-        setEmail(response.email);
-        setSentTime(new Date());
-      } catch (err) {
-        const apiError = err as ApiError;
-        setError('인증 정보를 불러올 수 없습니다. 다시 시도해주세요.');
-        
-        // 3초 후에 메인 페이지로 이동
-        setTimeout(() => router.push('/'), 3000);
-      } finally {
-        setIsLoading(false);
-      }
+      await checkTokenValidity();
+      setIsLoading(false);
     };
 
     fetchVerificationInfo();
   }, [token, router]);
+
+  // 주기적으로 토큰 유효성 체크
+  useEffect(() => {
+    if (!token || isLoading) return;
+
+    const interval = setInterval(() => {
+      checkTokenValidity();
+    }, 10000); // 10초마다
+
+    return () => clearInterval(interval);
+  }, [token, isLoading]);
+
+  // 탭 포커스 시 토큰 유효성 체크
+  useEffect(() => {
+    if (!token || isLoading) return;
+
+    const handleFocus = () => {
+      checkTokenValidity();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [token, isLoading]);
 
   // 재전송 쿨다운 타이머
   useEffect(() => {
@@ -116,6 +153,14 @@ export default function VerifyEmailSentPage() {
       }
     } catch (err) {
       const apiError = err as ApiError;
+
+      // 이미 인증이 완료된 경우
+      if (apiError.message?.includes('Invalid or expired verification token')) {
+        setMessage('이메일 인증이 완료되었습니다! 메인 페이지로 이동합니다...');
+        setError('');
+        setTimeout(() => router.push('/'), 2000);
+        return;
+      }
 
       // Rate limit (429) 에러 처리
       if (apiError.status === 429) {
