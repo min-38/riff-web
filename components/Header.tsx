@@ -67,12 +67,12 @@ export default function Header() {
                   <>
                     <div className="h-6 w-px bg-border/50 hidden sm:block" />
                     <div className="hidden sm:flex items-center gap-2">
-                      <a href="/login" className="cursor-pointer">
+                      <a href="/auth/login" className="cursor-pointer">
                         <Button variant="ghost" size="sm">
                           로그인
                         </Button>
                       </a>
-                      <a href="/signup" className="cursor-pointer">
+                      <a href="/auth/signup" className="cursor-pointer">
                         <button className="px-5 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-primary-500/30 hover:scale-105 transition-all duration-200 cursor-pointer">
                           회원가입
                         </button>
@@ -80,7 +80,7 @@ export default function Header() {
                     </div>
                     {/* Mobile auth */}
                     <div className="sm:hidden">
-                      <a href="/login" className="cursor-pointer">
+                      <a href="/auth/login" className="cursor-pointer">
                         <button className="px-4 py-1.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-xs font-semibold rounded-full hover:scale-105 transition-transform cursor-pointer">
                           로그인
                         </button>

@@ -46,7 +46,7 @@ export default function VerifyErrorPage() {
           {/* Action Buttons */}
           <div className="space-y-3">
             <button
-              onClick={() => router.push('/signup')}
+              onClick={() => router.push('/auth/signup')}
               className="w-full px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors cursor-pointer"
             >
               회원가입 페이지로

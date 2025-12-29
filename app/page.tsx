@@ -205,7 +205,7 @@ export default function Home() {
           <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
             몇 분만에 등록하고 전국의 음악가들과 거래하세요
           </p>
-          <a href="/signup" className="cursor-pointer">
+          <a href="/auth/signup" className="cursor-pointer">
             <button className="px-8 py-3.5 bg-white text-primary-600 font-semibold rounded-full hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
               지금 시작하기
             </button>

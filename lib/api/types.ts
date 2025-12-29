@@ -85,6 +85,37 @@ export interface CheckNicknameResponse {
   available: boolean;
 }
 
+// Password Reset Types
+export interface ForgotPasswordRequest {
+  email: string;
+  captchaToken?: string;
+}
+
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface VerifyResetTokenRequest {
+  token: string;
+}
+
+export interface VerifyResetTokenResponse {
+  success: boolean;
+  message: string;
+  email?: string;
+}
+
+export interface ResetPasswordRequest {
+  resetToken: string;
+  newPassword: string;
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 // Error Response
 export interface ApiError {
   message: string;
@@ -93,5 +124,6 @@ export interface ApiError {
   verified?: boolean;
   verificationToken?: string;
   remainingCooldown?: number;
+  retryAfter?: number;
   [key: string]: any;
 }

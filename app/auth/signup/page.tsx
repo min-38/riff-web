@@ -247,7 +247,7 @@ export default function SignupPage() {
 
       // 성공하면 이메일 인증 페이지로 이동
       if (response.verificationToken)
-        router.push(`/verify-email-sent?token=${response.verificationToken}`);
+        router.push(`/auth/verify-email-sent?token=${response.verificationToken}`);
       else
         setErrors({ general: '회원가입에 성공했지만 인증 페이지로 이동할 수 없습니다. 로그인을 시도해주세요.' });
     } catch (error) {
@@ -484,7 +484,7 @@ export default function SignupPage() {
         {/* Login Link */}
         <p className="text-center mt-6 text-base text-neutral-500">
           이미 계정이 있으신가요?{' '}
-          <a href="/login" className="text-primary-600 dark:text-primary-400 font-medium hover:underline cursor-pointer">
+          <a href="/auth/login" className="text-primary-600 dark:text-primary-400 font-medium hover:underline cursor-pointer">
             로그인
           </a>
         </p>

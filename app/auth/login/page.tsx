@@ -76,7 +76,7 @@ export default function LoginPage() {
         password,
       });
 
-      // 토큰이 있으면 저장 (rememberMe 설정 포함)
+      // 토큰이 있으면 저장 (로그인 유지 설정 포함)
       if (response.token && response.refreshToken) {
         setTokens(response.token, response.refreshToken, rememberMe);
       }
@@ -90,7 +90,10 @@ export default function LoginPage() {
         return;
       }
 
-      // 로그인 성공 - 이전 페이지 또는 메인으로 리다이렉트
+      // 로그인 성공 - localStorage 정리
+      localStorage.removeItem('passwordResetCompleted');
+
+      // 이전 페이지 또는 메인으로 리다이렉트
       const redirectPath = getRedirectAfterAuth();
       router.push(redirectPath);
     } catch (error) {
@@ -98,7 +101,7 @@ export default function LoginPage() {
 
       // 미인증 계정 - 인증 이메일 페이지로 리다이렉트
       if (apiError.status === 403 && apiError.verificationToken) {
-        router.push(`/verify-email-sent?token=${apiError.verificationToken}`);
+        router.push(`/auth/verify-email-sent?token=${apiError.verificationToken}`);
         return;
       }
 
@@ -224,11 +227,21 @@ export default function LoginPage() {
 
         {/* Additional Links */}
         <div className="mt-6 space-y-4">
+          {/* Forgot Password Link */}
+          <p className="text-center text-base text-neutral-500">
+            <a
+              href="/auth/forgot-password"
+              className="text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:underline cursor-pointer"
+            >
+              비밀번호를 잊으셨나요?
+            </a>
+          </p>
+
           {/* Signup Link */}
           <p className="text-center text-base text-neutral-500">
             아직 계정이 없으신가요?{' '}
             <a
-              href="/signup"
+              href="/auth/signup"
               className="text-primary-600 dark:text-primary-400 font-medium hover:underline cursor-pointer"
             >
               회원가입

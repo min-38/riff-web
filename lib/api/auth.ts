@@ -13,6 +13,12 @@ import type {
   LoginWithTokenResponse,
   AuthResponse,
   CheckNicknameResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  VerifyResetTokenRequest,
+  VerifyResetTokenResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
 } from './types';
 
 export const authApi = {
@@ -110,5 +116,40 @@ export const authApi = {
    */
   refreshToken: async (refreshToken: string): Promise<AuthResponse> => {
     return apiClient.post<AuthResponse>('/auth/refresh', { refreshToken });
+  },
+
+  /**
+   * 비밀번호 재설정 요청
+   */
+  forgotPassword: async (
+    data: ForgotPasswordRequest
+  ): Promise<ForgotPasswordResponse> => {
+    return apiClient.post<ForgotPasswordResponse>(
+      '/auth/forgot-password',
+      data
+    );
+  },
+
+  /**
+   * 비밀번호 재설정 토큰 검증
+   */
+  verifyResetToken: async (
+    data: VerifyResetTokenRequest
+  ): Promise<VerifyResetTokenResponse> => {
+    return apiClient.get<VerifyResetTokenResponse>(
+      `/auth/verify-reset-token?token=${encodeURIComponent(data.token)}`
+    );
+  },
+
+  /**
+   * 비밀번호 재설정
+   */
+  resetPassword: async (
+    data: ResetPasswordRequest
+  ): Promise<ResetPasswordResponse> => {
+    return apiClient.post<ResetPasswordResponse>(
+      '/auth/reset-password',
+      data
+    );
   },
 };
