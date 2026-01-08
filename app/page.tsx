@@ -1,8 +1,16 @@
 'use client';
 
 import Header from '@/components/Header';
-import { mockPosts } from '@/data/mockPosts';
 import Image from 'next/image';
+
+type FeaturedPost = {
+  id: number;
+  title: string;
+  price: number;
+  images: string[];
+  location: string;
+  viewCount: number;
+};
 
 const categories = [
   {
@@ -36,8 +44,7 @@ const categories = [
 ];
 
 export default function Home() {
-  // Featured posts - 최신 3개
-  const featuredPosts = mockPosts.slice(0, 3);
+  const featuredPosts: FeaturedPost[] = [];
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--background)' }}>
@@ -88,71 +95,77 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {featuredPosts.map((post, index) => (
-            <div
-              key={post.id}
-              className="group relative overflow-hidden rounded-3xl cursor-pointer animate-[scaleIn_0.6s_ease-out]"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Large image */}
+        {featuredPosts.length > 0 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            {featuredPosts.map((post, index) => (
               <div
-                className="relative overflow-hidden bg-neutral-100 dark:bg-neutral-900"
-                style={{
-                  aspectRatio: '3 / 4',
-                  minHeight: '400px',
-                  containIntrinsicSize: '100% 400px',
-                  contentVisibility: 'auto'
-                }}
+                key={post.id}
+                className="group relative overflow-hidden rounded-3xl cursor-pointer animate-[scaleIn_0.6s_ease-out]"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <Image
-                  src={post.images[0]}
-                  alt={post.title}
-                  fill
-                  priority={index === 0}
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                  className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                  sizes="(max-width: 1024px) 100vw, 33vw"
-                  style={{ width: '100%', height: '100%' }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                {/* Large image */}
+                <div
+                  className="relative overflow-hidden bg-neutral-100 dark:bg-neutral-900"
+                  style={{
+                    aspectRatio: '3 / 4',
+                    minHeight: '400px',
+                    containIntrinsicSize: '100% 400px',
+                    contentVisibility: 'auto'
+                  }}
+                >
+                  <Image
+                    src={post.images[0]}
+                    alt={post.title}
+                    fill
+                    priority={index === 0}
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                    className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    style={{ width: '100%', height: '100%' }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                {/* Content overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
-                  <div className="space-y-3">
-                    <span className="inline-block px-3 py-1.5 bg-primary-500/90 backdrop-blur-sm rounded-full text-sm font-medium">
-                      Featured
-                    </span>
-                    <h3 className="text-2xl sm:text-3xl font-bold leading-tight">
-                      {post.title}
-                    </h3>
-                    <p className="text-3xl sm:text-4xl font-bold">
-                      {post.price.toLocaleString('ko-KR')}
-                      <span className="text-lg font-normal ml-1">원</span>
-                    </p>
-                    <div className="flex items-center gap-4 text-sm text-white/80">
-                      <span className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        {post.location}
+                  {/* Content overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
+                    <div className="space-y-3">
+                      <span className="inline-block px-3 py-1.5 bg-primary-500/90 backdrop-blur-sm rounded-full text-sm font-medium">
+                        Featured
                       </span>
-                      <span className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                        {post.viewCount}
-                      </span>
+                      <h3 className="text-2xl sm:text-3xl font-bold leading-tight">
+                        {post.title}
+                      </h3>
+                      <p className="text-3xl sm:text-4xl font-bold">
+                        {post.price.toLocaleString('ko-KR')}
+                        <span className="text-lg font-normal ml-1">원</span>
+                      </p>
+                      <div className="flex items-center gap-4 text-sm text-white/80">
+                        <span className="flex items-center gap-1">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          {post.location}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          {post.viewCount}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-3xl border border-dashed border-neutral-200 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/40 p-10 text-center text-neutral-500 dark:text-neutral-400">
+            아직 주목할 만한 상품이 없습니다.
+          </div>
+        )}
       </section>
 
       {/* Categories Section */}

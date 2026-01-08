@@ -14,6 +14,8 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
       defaultTheme="system"
       enableSystem
       storageKey="riff-theme"
+      disableTransitionOnChange={false}
+      enableColorScheme
     >
       {children}
     </NextThemesProvider>

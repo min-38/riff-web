@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { Button } from './ui';
 import ThemeToggle from './ThemeToggle';
 import ProfileMenu from './ProfileMenu';
@@ -7,6 +8,8 @@ import { useAuth } from '@/hooks/useAuth';
 
 export default function Header() {
   const { isLoggedIn, isLoading, user, logout } = useAuth();
+  const pathname = usePathname();
+
   return (
     <header className="border-b border-border/50 glass sticky top-0 z-50 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,34 +24,21 @@ export default function Header() {
             <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">Riff</span>
           </a>
 
-          {/* Search bar - Hidden on mobile */}
-          <div className="hidden md:flex flex-1 max-w-xl mx-8">
-            <div className="relative w-full group">
-              <svg
-                className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary-500 transition-colors"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder="악기, 브랜드, 모델명 검색..."
-                className="w-full pl-12 pr-4 py-2.5 border border-transparent hover:border-neutral-300 dark:hover:border-neutral-700 focus:border-primary-500 rounded-full placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
-                style={{
-                  backgroundColor: 'var(--background-secondary)',
-                  color: 'var(--foreground)'
-                }}
-                suppressHydrationWarning
-              />
-            </div>
-          </div>
+          {/* Navigation - Hidden on mobile */}
+          <nav className="hidden lg:flex items-center gap-1 ml-8">
+            <a
+              href="/trade/gears"
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer ${
+                pathname?.startsWith('/trade/gears')
+                  ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+                  : 'text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+              }`}
+            >
+              악기거래
+            </a>
+          </nav>
+
+          <div className="flex-1" />
 
           {/* Right section */}
           <div className="flex items-center gap-3">
@@ -90,35 +80,6 @@ export default function Header() {
                 )}
               </>
             )}
-          </div>
-        </div>
-
-        {/* Mobile Search bar */}
-        <div className="md:hidden pb-3 pt-1">
-          <div className="relative group">
-            <svg
-              className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary-500 transition-colors"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            <input
-              type="text"
-              placeholder="악기 검색..."
-              className="w-full pl-11 pr-4 py-2.5 border border-transparent focus:border-primary-500 rounded-full text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                color: 'var(--foreground)'
-              }}
-              suppressHydrationWarning
-            />
           </div>
         </div>
       </div>

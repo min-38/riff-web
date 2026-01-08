@@ -2,6 +2,7 @@
 const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 const REMEMBER_ME_KEY = 'remember_me';
+const AUTH_EXPIRED_KEY = 'auth_expired';
 
 // localStorage 또는 sessionStorage 가져오기
 const getStorage = (): Storage => {
@@ -85,14 +86,10 @@ export const clearTokens = () => {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(REMEMBER_ME_KEY);
+    localStorage.removeItem(AUTH_EXPIRED_KEY);
     sessionStorage.removeItem(ACCESS_TOKEN_KEY);
     sessionStorage.removeItem(REFRESH_TOKEN_KEY);
   }
-};
-
-// 로그인 여부 확인
-export const isAuthenticated = (): boolean => {
-  return !!getAccessToken();
 };
 
 // Base64 URL-safe 디코딩 함수
@@ -117,19 +114,51 @@ const base64UrlDecode = (str: string): string => {
   return new TextDecoder('utf-8').decode(bytes);
 };
 
+const getTokenPayload = (token: string): Record<string, unknown> | null => {
+  try {
+    const payload = token.split('.')[1];
+    return JSON.parse(base64UrlDecode(payload));
+  } catch (error) {
+    console.error('Failed to decode token payload:', error);
+    return null;
+  }
+};
+
+// 로그인 여부 확인
+export const isAuthenticated = (): boolean => {
+  const token = getAccessToken();
+  if (!token) return false;
+
+  const payload = getTokenPayload(token);
+  if (!payload || typeof payload.exp !== 'number') {
+    return false;
+  }
+
+  const now = Math.floor(Date.now() / 1000);
+  if (payload.exp <= now) {
+    clearTokens();
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(AUTH_EXPIRED_KEY, 'true');
+    }
+    return false;
+  }
+
+  return true;
+};
+
 // JWT 토큰에서 사용자 정보 추출
 export const getUserFromToken = (): { userId: string; email: string; nickname: string } | null => {
   const token = getAccessToken();
   if (!token) return null;
 
   try {
-    const payload = token.split('.')[1];
-    const decoded = JSON.parse(base64UrlDecode(payload));
+    const decoded = getTokenPayload(token);
+    if (!decoded) return null;
 
     return {
-      userId: decoded.sub || decoded.userId,
-      email: decoded.email,
-      nickname: decoded.nickname,
+      userId: (decoded.sub || decoded.userId) as string,
+      email: decoded.email as string,
+      nickname: decoded.nickname as string,
     };
   } catch (error) {
     console.error('Failed to decode token:', error);

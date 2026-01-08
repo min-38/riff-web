@@ -26,6 +26,7 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [showExpiredNotice, setShowExpiredNotice] = useState(false);
 
   // 이미 로그인된 경우 메인 페이지로 리다이렉트
   useEffect(() => {
@@ -39,6 +40,19 @@ export default function LoginPage() {
   // 이전 로그인 유지 설정 불러오기
   useEffect(() => {
     setRememberMe(getRememberMe());
+  }, []);
+
+  useEffect(() => {
+    const expiredFlag = localStorage.getItem('auth_expired');
+    if (expiredFlag) {
+      setShowExpiredNotice(true);
+      localStorage.removeItem('auth_expired');
+      const timer = window.setTimeout(() => {
+        setShowExpiredNotice(false);
+      }, 4000);
+      return () => window.clearTimeout(timer);
+    }
+    return undefined;
   }, []);
 
   // 이메일 유효성 검사
@@ -146,6 +160,11 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--background)' }}>
       <Header />
+      {showExpiredNotice && (
+        <div className="fixed top-20 left-1/2 z-50 w-[92%] max-w-md -translate-x-1/2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700 shadow-lg dark:border-red-900/40 dark:bg-red-950/80 dark:text-red-200">
+          세션이 만료되어 로그아웃되었습니다. 다시 로그인해주세요.
+        </div>
+      )}
 
       <div className="max-w-md mx-auto px-4 py-12 sm:py-16">
         {/* Header */}
